@@ -32,7 +32,7 @@ The Inventory Management module handles the complete lifecycle of spare parts an
 
 ### Business Process Flow
 
-![Inventory Flow](images/Inventory%20Management%20Flow.png)
+<!-- ![Inventory Flow](images/Inventory%20Management%20Flow.png) -->
 
 ```mermaid
 flowchart TD
@@ -84,7 +84,7 @@ The Asset Management module provides comprehensive lifecycle management of physi
 
 ### Business Process Flow
 
-![Asset Management Flow](images/Asset%20Management%20Flow.png)
+<!-- ![Asset Management Flow](images/Asset%20Management%20Flow.png) -->
 
 ```mermaid
 flowchart TD
@@ -224,7 +224,7 @@ The Work Order Management module serves as the central coordination point for al
 
 ### Business Process Flow
 
-![Work Order Flow](images/Work%20Order%20Management%20Flow.png)
+<!-- ![Work Order Flow](images/Work%20Order%20Management%20Flow.png) -->
 
 ```mermaid
 flowchart TD
@@ -291,7 +291,7 @@ This module manages both planned preventive maintenance activities and unplanned
 
 ### Business Process Flow
 
-![Preventive and Corrective Flow](images/Preventive%20and%20Corrective%20Management%20Flow.png)
+<!-- ![Preventive and Corrective Flow](images/Preventive%20and%20Corrective%20Management%20Flow.png) -->
 
 ```mermaid
 flowchart TD
@@ -354,7 +354,7 @@ flowchart TD
 
 ## 5. Human Resource Management Flow
 
-![Human Resources Flow](images/Human%20Resources%20Management%20Flow.png)
+<!-- ![Human Resources Flow](images/Human%20Resources%20Management%20Flow.png) -->
 
 ### Description
 The Human Resource Management module coordinates both human resources and equipment resources to ensure optimal allocation for maintenance activities. It manages skills, availability, scheduling, and performance tracking across all maintenance operations.
