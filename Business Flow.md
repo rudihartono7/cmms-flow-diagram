@@ -7,6 +7,124 @@ This document provides a comprehensive breakdown of the Computerized Maintenance
 ## Main Process Flow Description
 
 ```mermaid
+flowchart TD
+    %% Inventory Management Section (Blue)
+    subgraph INV ["🏭 INVENTORY MANAGEMENT"]
+        A[Purchase Order<br/>PO Creation] --> B[Purchase Request]
+        B --> C[Advance for<br/>Procurement]
+        C --> D[Purchase Stock<br/>Procurement]
+        D --> E[Incoming Stock]
+        E --> F[Stock Inspection]
+        F --> G{Quality Check}
+        G -->|Pass| H[Store Inventory<br/>Data]
+        G -->|Fail| I[Defective/<br/>Unsaleable Stock]
+        I --> J[Hidden Hazard<br/>Reports]
+        
+        K[Inventory<br/>Management] --> L[Purchase<br/>Request]
+        L --> M[Intelligent<br/>Spare Parts]
+        M --> N[Replenishment]
+        
+        H --> O[Parts<br/>Management]
+        O --> P[Store Inventory<br/>Data]
+        P --> Q[Part Issuance]
+    end
+    
+    %% Asset Management Section (Green)
+    subgraph AST ["🏗️ ASSET MANAGEMENT"]
+        R[Asset<br/>Management] --> S[Asset<br/>Performance]
+        S --> T[Score<br/>KPI]
+        T --> U[Product Lifecycle<br/>Management]
+        
+        V[Maintenance<br/>Equipment] --> W[Obtain Equipment<br/>Supply List]
+        
+        X[Human<br/>Resources] --> Y[Equipment<br/>Resources]
+        Y --> Z[Resources<br/>Update]
+        Z --> AA[Daily Resources<br/>Update]
+    end
+    
+    %% Work Order Management Section (Purple)
+    subgraph WOM ["⚙️ WORK ORDER MANAGEMENT"]
+        BB[Work Order<br/>Management] --> CC[Work Order<br/>Control]
+        CC --> DD[Create Work<br/>Order]
+        DD --> EE[Work Order<br/>Execution]
+        
+        EE --> FF[Issue Work<br/>Order]
+        FF --> GG[Generate Issue<br/>Work Order]
+        GG --> HH[Store<br/>Maintenance<br/>Details]
+    end
+    
+    %% Preventive Maintenance Section (Orange)
+    subgraph PM ["🔧 PREVENTIVE MAINTENANCE"]
+        II[Preventive<br/>Maintenance] --> JJ[Schedule<br/>Maintenance]
+        JJ --> KK[Maintenance<br/>Non WO]
+        KK --> LL[Task Scheduler]
+        LL --> MM[Daily Maintenance<br/>Task]
+        MM --> NN[Preventive Maintenance<br/>Work Order]
+    end
+    
+    %% Corrective Maintenance Section (Red)
+    subgraph CM ["🚨 CORRECTIVE MAINTENANCE"]
+        OO[Hidden Hazard<br/>Maintenance] --> PP[Reports and<br/>Diagnostics]
+        PP --> QQ[Inspection<br/>Work Order]
+        
+        RR[Corrective<br/>Maintenance] --> SS[Fault Monitor<br/>and Control]
+        SS --> TT[Fault<br/>Confirmed]
+        TT --> UU[Corrective Maintenance<br/>Work Order]
+    end
+    
+    %% Access Control Section (Pink)
+    subgraph AC ["🔐 ACCESS CONTROL"]
+        VV[Access Control] --> WW[User<br/>Management]
+        WW --> XX[Roles<br/>Management]
+    end
+    
+    %% Central Database and Reporting
+    subgraph DB ["💾 CMMS DATABASE & REPORTING"]
+        YY[(CMMS<br/>Database)]
+        ZZ[Retrieve Data for<br/>Performance<br/>Analysis]
+        AAA[Generate Analysis<br/>Reports]
+        
+        BBB[Daily<br/>Resources<br/>Update] --> YY
+        YY --> ZZ
+        ZZ --> AAA
+        
+        CCC[Reporting] --> DDD[Report<br/>Generation]
+        DDD --> EEE[Log Files]
+        AAA --> CCC
+    end
+    
+    %% Integration Flows
+    Q --> BB
+    Q --> II
+    Q --> RR
+    
+    U --> BB
+    W --> AA
+    AA --> BBB
+    
+    NN --> EE
+    UU --> EE
+    QQ --> EE
+    
+    HH --> YY
+    J --> PP
+    
+    %% Styling
+    classDef inventory fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    classDef asset fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    classDef workorder fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef preventive fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef corrective fill:#ffebee,stroke:#d32f2f,stroke-width:2px
+    classDef access fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    classDef database fill:#e0f2f1,stroke:#00695c,stroke-width:2px
+    
+    class A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q inventory
+    class R,S,T,U,V,W,X,Y,Z,AA asset
+    class BB,CC,DD,EE,FF,GG,HH workorder
+    class II,JJ,KK,LL,MM,NN preventive
+    class OO,PP,QQ,RR,SS,TT,UU corrective
+    class VV,WW,XX access
+    class YY,ZZ,AAA,BBB,CCC,DDD,EEE database
 ```
 
 The main CMMS process flow diagram illustrates the interconnected nature of five core modules:
