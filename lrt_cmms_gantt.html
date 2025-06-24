@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LRT CMMS MVP - 6 Month Gantt Chart</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+        
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        
+        .gantt-container {
+            overflow-x: auto;
+            padding: 0;
+        }
+        
+        .gantt-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            min-width: 1200px;
+        }
+        
+        .gantt-table th {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 12px 8px;
+            text-align: center;
+            font-weight: 600;
+            color: #495057;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .task-header {
+            background: #343a40 !important;
+            color: white !important;
+            text-align: left !important;
+            width: 300px;
+            min-width: 300px;
+        }
+        
+        .gantt-table td {
+            border: 1px solid #e9ecef;
+            padding: 8px;
+            text-align: center;
+            height: 40px;
+            vertical-align: middle;
+        }
+        
+        .task-name {
+            text-align: left !important;
+            font-weight: 500;
+            color: #495057;
+            background: #f8f9fa;
+            padding-left: 15px !important;
+        }
+        
+        .phase-header {
+            background: #6c757d !important;
+            color: white !important;
+            font-weight: bold !important;
+            text-align: center !important;
+        }
+        
+        .task-bar {
+            height: 24px;
+            border-radius: 12px;
+            margin: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 500;
+            font-size: 10px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        .critical { background: linear-gradient(135deg, #dc3545, #c82333); }
+        .high { background: linear-gradient(135deg, #fd7e14, #e8650e); }
+        .medium { background: linear-gradient(135deg, #ffc107, #e0a800); }
+        .low { background: linear-gradient(135deg, #28a745, #218838); }
+        .testing { background: linear-gradient(135deg, #6f42c1, #5a359a); }
+        .deployment { background: linear-gradient(135deg, #17a2b8, #138496); }
+        
+        .milestone {
+            background: linear-gradient(135deg, #e83e8c, #d91a72) !important;
+            font-weight: bold;
+            border-radius: 20px;
+        }
+        
+        .week-header {
+            font-size: 10px;
+            writing-mode: vertical-lr;
+            text-orientation: mixed;
+            padding: 8px 4px !important;
+        }
+        
+        .legend {
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .legend h3 {
+            margin: 0 0 15px 0;
+            color: #495057;
+        }
+        
+        .legend-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 10px;
+        }
+        
+        .stats {
+            padding: 20px 30px;
+            background: #e9ecef;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #2a5298;
+        }
+        
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.8em; }
+            .gantt-table { font-size: 10px; }
+            .task-header { width: 200px; min-width: 200px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚊 LRT CMMS MVP Implementation</h1>
+            <p>6-Month Production-Ready Development Timeline</p>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number">26</div>
+                <div class="stat-label">Total Weeks</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">32</div>
+                <div class="stat-label">Key Features</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">6</div>
+                <div class="stat-label">Major Phases</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">8</div>
+                <div class="stat-label">Milestones</div>
+            </div>
+        </div>
+        
+        <div class="gantt-container">
+            <table class="gantt-table">
+                <thead>
+                    <tr>
+                        <th class="task-header">Task / Feature</th>
+                        <th class="week-header">W1</th>
+                        <th class="week-header">W2</th>
+                        <th class="week-header">W3</th>
+                        <th class="week-header">W4</th>
+                        <th class="week-header">W5</th>
+                        <th class="week-header">W6</th>
+                        <th class="week-header">W7</th>
+                        <th class="week-header">W8</th>
+                        <th class="week-header">W9</th>
+                        <th class="week-header">W10</th>
+                        <th class="week-header">W11</th>
+                        <th class="week-header">W12</th>
+                        <th class="week-header">W13</th>
+                        <th class="week-header">W14</th>
+                        <th class="week-header">W15</th>
+                        <th class="week-header">W16</th>
+                        <th class="week-header">W17</th>
+                        <th class="week-header">W18</th>
+                        <th class="week-header">W19</th>
+                        <th class="week-header">W20</th>
+                        <th class="week-header">W21</th>
+                        <th class="week-header">W22</th>
+                        <th class="week-header">W23</th>
+                        <th class="week-header">W24</th>
+                        <th class="week-header">W25</th>
+                        <th class="week-header">W26</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Phase 1: Foundation -->
+                    <tr>
+                        <td class="phase-header">PHASE 1: FOUNDATION & CORE (Months 1-2)</td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td class="task-name">Database Design & Setup</td>
+                        <td><div class="task-bar critical">Design</div></td>
+                        <td><div class="task-bar critical">Setup</div></td>
+                        <td><div class="task-bar critical">Test</div></td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td class="task-name">User Management & Authentication</td>
+                        <td></td>
+                        <td><div class="task-bar critical">Backend</div></td>
+                        <td><div class="task-bar critical">Frontend</div></td>
+                        <td><div class="task-bar critical">RBAC</div></td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td class="task-name">Basic Asset Management</td>
+                        <td></td><td></td>
+                        <td><div class="task-bar critical">Model</div></td>
+                        <td><div class="task-bar critical">Registry</div></td>
+                        <td><div class="task-bar critical">Hierarchy</div></td>
+                        <td><div class="task-bar critical">Status</div></td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td class="task-name">🎯 Milestone: Core Infrastructure</td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td>
+                        <td><div class="task-bar milestone">M1</div></td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                    </tr>
+                    
+                    <!-- Phase 2: Work Orders -->
+                    <tr>
+                        <td class="phase-header">PHASE 2: WORK ORDER MANAGEMENT (Months 2-3)</td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td class="task-name">Work Order Core System</td>
+                        <td></td><td></td><td></td><td></td><td></td>
+                        <td><div class="task-bar critical">Create</div></td>
+                        <td><div class="task-bar critical">Assign</div></td>
+                        <td><div class="task-bar critical">Track</div></td>
+                        <td><div class="task-bar critical">Status</div></td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td class="task-name">Mobile Work Order Interface</td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td>
+                        <td><div class="task-bar high">Design</div></td>
+                        <td><div class="task-bar high">Develop</div></td>
+                        <td><div class="task-bar high">Test</div></td>
+                        <td><div class="task-bar high">Deploy</div></td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td class="task-name">Basic Scheduling System</td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                        <td><div class="task-bar high">Calendar</div></td>
+                        <td><div class="task-bar high">Queue</div></td>
+                        <td><div class="task-bar high">Resource</div></td>
+                        <td><div class="task-bar high">Recurring</div></td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td class="task-name">🎯 Milestone: Work Order System</td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                        <td><div class="task-bar milestone">M2</div></td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                    </tr>
+                    
+                    <!-- Phase 3: Inventory -->
+                    <tr>
+                        <td class="phase-header">PHASE 3: INVENTORY MANAGEMENT (Months 3-4)</td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td class="task-name">Parts Catalog & Stock Management</td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                        <td><div class="task-bar high">Catalog</div></td>
+                        <td><div class="task-bar high">Stock</div></td>
+                        <td><div class="task-bar high">Issuance</div></td>
+                        <td><div class="task-bar high">Alerts</div></td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td class="task-name">Basic Procurement System</td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                        <td><div class="task-bar medium">Request</div></td>
+                        <td><div class="task-bar medium">Vendor</div></td>
+                        <td><div class="task-bar medium">PO</div></td>
+                        <td><div class="task-bar medium">Receive</div></td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td class="task-name">🎯 Milestone: Inventory System</td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                        <td><div class="task-bar milestone">M3</div></td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                    </tr>
+                    
+                    <!-- Phase 4: Maintenance Operations -->
+                    <tr>
+                        <td class="phase-header">PHASE 4: MAINTENANCE OPERATIONS (Months 4-5)</td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td class="task-name">Preventive Maintenance Core</td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                        <td><div class="task-bar critical">Schedule</div></td>
+                        <td><div class="task-bar critical">Auto-Gen</div></td>
+                        <td><div class="task-bar critical">Checklist</div></td>
+                        <td><div class="task-bar critical">History</div></td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td class="task-name">Corrective Maintenance System</td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                        <td><div class="task-bar critical">Failure</div></td>
+                        <td><div class="task-bar critical">Emergency</div></td>
+                        <td><div class="task-bar critical">Category</div></td>
+                        <td><div class="task-bar critical">Action</div></td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td class="task-name">LRT-Specific Features</td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                        <td><div class="task-bar high">Rolling Stock</div></td>
+                        <td><div class="task-bar high">Infrastructure</div></td>
+                        <td><div class="task-bar high">Safety</div></td>
+                        <td><div class="task-bar high">Compliance</div></td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td class="task-name">🎯 Milestone: Maintenance Operations</td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                        <td><div class="task-bar milestone">M4</div></td>
+                        <td></td><td></td><td></td><td></td><td></td>
+                    </tr>
+                    
+                    <!-- Phase 5: Reporting -->
+                    <tr>
+                        <td class="phase-header">PHASE 5: REPORTING & ANALYTICS (Month 5-6)</td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td class="task-name">Essential Reports Development</td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                        <td><div class="task-bar high">WO Reports</div></td>
+                        <td><div class="task-bar high">Downtime</div></td>
+                        <td><div class="task-bar high">Cost</div></td>
+                        <td><div class="task-bar high">Compliance</div></td>
+                        <td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td class="task-name">KPI Dashboard & Metrics</td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                        <td><div class="task-bar medium">MTBF/MTTR</div></td>
+                        <td><div class="task-bar medium">Availability</div></td>
+                        <td><div class="task-bar medium">Dashboard</div></td>
+                        <td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td class="task-name">🎯 Milestone: Reporting System</td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                        <td><div class="task-bar milestone">M5</div></td>
+                        <td></td>
+                    </tr>
+                    
+                    <!-- Phase 6: Testing & Deployment -->
+                    <tr>
+                        <td class="phase-header">PHASE 6: TESTING & PRODUCTION (Month 6)</td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td class="task-name">System Integration Testing</td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                        <td><div class="task-bar testing">Integration</div></td>
+                        <td><div class="task-bar testing">Performance</div></td>
+                        <td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td class="task-name">User Acceptance Testing (UAT)</td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                        <td><div class="task-bar testing">UAT</div></td>
+                        <td><div class="task-bar testing">Fix</div></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="task-name">Production Deployment</td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                        <td><div class="task-bar deployment">Setup</div></td>
+                        <td><div class="task-bar deployment">Go-Live</div></td>
+                    </tr>
+                    <tr>
+                        <td class="task-name">Training & Documentation</td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                        <td><div class="task-bar low">Training</div></td>
+                        <td><div class="task-bar low">Support</div></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="task-name">🎯 Milestone: Production Ready</td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                        <td><div class="task-bar milestone">M6</div></td>
+                    </tr>
+                    
+                    <!-- Parallel Activities -->
+                    <tr>
+                        <td class="phase-header">PARALLEL ACTIVITIES (Ongoing)</td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td class="task-name">Security & Performance Optimization</td>
+                        <td><div class="task-bar low">Security</div></td>
+                        <td><div class="task-bar low">Security</div></td>
+                        <td><div class="task-bar low">Security</div></td>
+                        <td><div class="task-bar low">Security</div></td>
+                        <td><div class="task-bar low">Security</div></td>
+                        <td><div class="task-bar low">Security</div></td>
+                        <td><div class="task-bar low">Security</div></td>
+                        <td><div class="task-bar low">Security</div></td>
+                        <td><div class="task-bar low">Security</div></td>
+                        <td><div class="task-bar low">Security</div></td>
+                        <td><div class="task-bar low">Security</div></td>
+                        <td><div class="task-bar low">Security</div></td>
+                        <td><div class="task-bar low">Security</div></td>
+                        <td><div class="task-bar low">Security</div></td>
+                        <td><div class="task-bar low">Security</div></td>
+                        <td><div class="task-bar low">Security</div></td>
+                        <td><div class="task-bar low">Security</div></td>
+                        <td><div class="task-bar low">Security</div></td>
+                        <td><div class="task-bar low">Security</div></td>
+                        <td><div class="task-bar low">Security</div></td>
+                        <td><div class="task-bar low">Security</div></td>
+                        <td><div class="task-bar low">Security</div></td>
+                        <td><div class="task-bar low">Security</div></td>
+                        <td><div class="task-bar low">Security</div></td>
+                        <td><div class="task-bar low">Security</div></td>
+                        <td><div class="task-bar low">Security</div></td>
+                    </tr>
+                    <tr>
+                        <td class="task-name">Documentation & Quality Assurance</td>
+                        <td><div class="task-bar medium">Docs</div></td>
+                        <td><div class="task-bar medium">Docs</div></td>
+                        <td><div class="task-bar medium">Docs</div></td>
+                        <td><div class="task-bar medium">Docs</div></td>
+                        <td><div class="task-bar medium">Docs</div></td>
+                        <td><div class="task-bar medium">Docs</div></td>
+                        <td><div class="task-bar medium">Docs</div></td>
+                        <td><div class="task-bar medium">Docs</div></td>
+                        <td><div class="task-bar medium">Docs</div></td>
+                        <td><div class="task-bar medium">Docs</div></td>
+                        <td><div class="task-bar medium">Docs</div></td>
+                        <td><div class="task-bar medium">Docs</div></td>
+                        <td><div class="task-bar medium">Docs</div></td>
+                        <td><div class="task-bar medium">Docs</div></td>
+                        <td><div class="task-bar medium">Docs</div></td>
+                        <td><div class="task-bar medium">Docs</div></td>
+                        <td><div class="task-bar medium">Docs</div></td>
+                        <td><div class="task-bar medium">Docs</div></td>
+                        <td><div class="task-bar medium">Docs</div></td>
+                        <td><div class="task-bar medium">Docs</div></td>
+                        <td><div class="task-bar medium">Docs</div></td>
+                        <td><div class="task-bar medium">Docs</div></td>
+                        <td><div class="task-bar medium">Docs</div></td>
+                        <td><div class="task-bar medium">Docs</div></td>
+                        <td><div class="task-bar medium">Docs</div></td>
+                        <td><div class="task-bar medium">Docs</div></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="legend">
+            <h3>📊 Task Priority Legend</h3>
+            <div class="legend-items">
+                <div class="legend-item">
+                    <div class="legend-color critical"></div>
+                    <span><strong>Critical Priority</strong> - Core functionality, system blocking</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color high"></div>
+                    <span><strong>High Priority</strong> - Important features, user impact</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color medium"></div>
+                    <span><strong>Medium Priority</strong> - Supporting features</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color low"></div>
+                    <span><strong>Low Priority</strong> - Enhancement, optimization</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color testing"></div>
+                    <span><strong>Testing Phase</strong> - Quality assurance activities</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color deployment"></div>
+                    <span><strong>Deployment</strong> - Production deployment activities</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color milestone" style="background: linear-gradient(135deg, #e83e8c, #d91a72);"></div>
+                    <span><strong>Milestones</strong> - Key project checkpoints</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number">40%</div>
+                <div class="stat-label">Critical Features</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">30%</div>
+                <div class="stat-label">High Priority</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">20%</div>
+                <div class="stat-label">Medium Priority</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">10%</div>
+                <div class="stat-label">Testing & Deploy</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Add interactive features
+        document.addEventListener('DOMContentLoaded', function() {
+            // Highlight milestone rows on hover
+            const milestoneRows = document.querySelectorAll('tr:has(.milestone)');
+            milestoneRows.forEach(row => {
+                row.addEventListener('mouseenter', function() {
+                    this.style.backgroundColor = '#fff3cd';
+                });
+                row.addEventListener('mouseleave', function() {
+                    this.style.backgroundColor = '';
+                });
+            });
+            
+            // Add click handler for task bars to show details
+            const taskBars = document.querySelectorAll('.task-bar');
+            taskBars.forEach(bar => {
+                bar.addEventListener('click', function() {
+                    const taskName = this.closest('tr').querySelector('.task-name').textContent;
+                    const taskType = this.textContent;
+                    alert(`Task: ${taskName}\nActivity: ${taskType}\nDuration: 1 week`);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
