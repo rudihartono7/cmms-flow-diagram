@@ -2080,7 +2080,7 @@ This section details the key business processes within the Maintenance Managemen
     *   **Roles Involved:** Asset Manager, Data Entry Specialist, Maintenance Planner.
     *   **System Interactions:** Creation of records in `ASSETS`, `LOCATIONS`, `ASSET_SPECIFICATIONS`, `ASSET_METERS` tables.
 
-    ```mermaid
+```mermaid
 graph TD
     A[Identify Asset Details] --> B{Define Location};
     B --> C{Establish Hierarchy};
@@ -2167,7 +2167,7 @@ graph TD
     *   **Roles Involved:** Technician, Maintenance Supervisor, Finance.
     *   **System Interactions:** Final updates to `WORK_ORDERS` table; data archiving for historical analysis; integration with financial systems.
 
-    ```mermaid
+```mermaid
 graph TD
     A[Work Request/Service Request Creation] --> B{Work Order Planning and Approval};
     B --> C[Work Order Execution];
@@ -2205,7 +2205,7 @@ graph TD
     *   **Roles Involved:** Automated System, Maintenance Planner.
     *   **System Interactions:** Automated creation of records in `WORK_ORDERS` table; updates to `PM_SCHEDULES` (last generation date).
 
-    ```mermaid
+```mermaid
 graph TD
     A[PM Plan Definition] --> B{PM Work Order Generation};
     B --> C[Work Order Planning and Approval];
