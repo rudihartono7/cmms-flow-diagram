@@ -2,7 +2,7 @@
 
 **Document Version:** 1.0  
 **Date:** August 6, 2025  
-**Author:** Manus AI
+**Author:** Rudi Hartono
 **Classification:** Comprehensive Technical Reference
 
 ---
