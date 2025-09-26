@@ -350,6 +350,7 @@ CREATE TABLE METER_READINGS (
 -- Create partitions for meter readings (example for monthly partitioning)
 -- CREATE TABLE meter_readings_2025_01 PARTITION OF METER_READINGS
 -- FOR VALUES FROM ('2025-01-01') TO ('2025-02-01');
+```
 
 #### 4.2.2 Location Management
 
